@@ -1,0 +1,22 @@
+[package]
+name = "drift-linalg"
+version = "1.0.0"
+edition = "2021"
+description = "Drift-free linear algebra primitives built on Neumaier-compensated summation"
+authors = ["Armonti Du-Bose-Hill <armonti@onlysg.solutions>"]
+license = "Apache-2.0"
+readme = "README.md"
+keywords = ["physics", "deterministic", "linear-algebra", "game-engine", "numerics"]
+categories = ["mathematics", "simulation", "game-engines"]
+
+[features]
+default = []
+# Serialization is opt-in. We do not impose it on the physics kernel.
+serialization = ["dep:serde"]
+
+[dependencies]
+# Use git dependency until drift-kernel is published to crates.io
+drift-kernel = { git = "https://github.com/aduboseh/drift-kernel.git", tag = "v1.0.0" }
+serde = { version = "1.0", optional = true, features = ["derive"] }
+
+[dev-dependencies]
