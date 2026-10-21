@@ -2,7 +2,7 @@
 name = "drift-linalg"
 version = "1.0.0"
 edition = "2021"
-description = "Drift-free linear algebra primitives built on Neumaier-compensated summation"
+description = "Component-wise compensated vector accumulation built on Neumaier summation"
 authors = ["Armonti Du-Bose-Hill <armonti@onlysg.solutions>"]
 license = "Apache-2.0"
 readme = "README.md"
