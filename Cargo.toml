@@ -2,7 +2,7 @@
 name = "drift-linalg"
 version = "1.0.0"
 edition = "2021"
-description = "Drift-free linear algebra primitives built on Neumaier-compensated summation"
+description = "Component-wise compensated vector accumulation built on Neumaier summation"
 authors = ["Armonti Du-Bose-Hill <armonti@onlysg.solutions>"]
 license = "Apache-2.0"
 readme = "README.md"
@@ -15,8 +15,9 @@ default = []
 serialization = ["dep:serde"]
 
 [dependencies]
-# Use git dependency until drift-kernel is published to crates.io
-drift-kernel = { git = "https://github.com/aduboseh/drift-kernel.git", tag = "v1.0.0" }
+# Immutable Kernel mainline source with Neumaier/Debug/Clone (v1.0.0 tag lacks these).
+# Replace with a newly verified release tag only after an explicit compatibility check.
+drift-kernel = { git = "https://github.com/aduboseh/drift-kernel.git", rev = "9ac4bae6ea02eaccfbb2a7ebfce25dc3b594fc21" }
 serde = { version = "1.0", optional = true, features = ["derive"] }
 
 [dev-dependencies]
