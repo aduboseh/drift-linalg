@@ -15,8 +15,9 @@ default = []
 serialization = ["dep:serde"]
 
 [dependencies]
-# Use git dependency until drift-kernel is published to crates.io
-drift-kernel = { git = "https://github.com/aduboseh/drift-kernel.git", tag = "v1.0.0" }
+# Review-branch integration pin: immutable Kernel revision with Neumaier/Debug/Clone.
+# Replace with a verified new release tag after the Kernel PR passes and is merged.
+drift-kernel = { git = "https://github.com/aduboseh/drift-kernel.git", rev = "09275dd34d62958860595bb5017080ff751047fa" }
 serde = { version = "1.0", optional = true, features = ["derive"] }
 
 [dev-dependencies]
