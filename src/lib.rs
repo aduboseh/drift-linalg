@@ -1,8 +1,9 @@
-//! Drift-Linalg — Drift-Free Linear Algebra Primitives
+//! Drift-Linalg — Compensated Vector Accumulation Primitives
 //!
 //! Provides spatial accumulator types built on top of `drift-kernel`'s
-//! Neumaier-compensated summation. These types allow physics simulations
-//! to maintain bounded numerical error across millions of operations.
+//! Neumaier-compensated summation. `Vec3Accumulator` compensates *additions*
+//! on each component, but not multiplication, ordinary Vec3 arithmetic, or dot
+//! products. No universal operation-count-independent error bound is claimed.
 //!
 //! # Usage
 //!
@@ -12,7 +13,7 @@
 //! let mut position = Vec3Accumulator::new();
 //! let velocity = Vec3 { x: 1.0, y: 2.0, z: 3.0 };
 //!
-//! // Integrate over many frames without drift
+//! // Integrate over many frames with compensated additions
 //! for _ in 0..100_000 {
 //!     position.add_scaled(velocity, 1.0 / 60.0);
 //! }
@@ -54,7 +55,8 @@ impl Vec3 {
 
     /// Returns the raw IEEE-754 little-endian bytes.
     ///
-    /// This is the **only valid way** to hash state for determinism verification.
+    /// This provides canonical raw bytes for this vector, not a complete simulation
+    /// state fingerprint or a cross-platform execution guarantee.
     /// Do NOT use text formatting (Debug, Display) for hashing—floating-point
     /// text representation is not guaranteed to be platform-consistent.
     #[inline]
@@ -149,8 +151,9 @@ impl std::ops::Neg for Vec3 {
 
 /// A 3D spatial accumulator
 ///
-/// Uses Neumaier-compensated summation on each component to maintain
-/// O(ε) bounded error regardless of operation count.
+/// Uses Neumaier-compensated summation for each coordinate. Accuracy depends
+/// on input magnitude, conditioning and floating-point assumptions; it is not
+/// uniformly bounded by O(ε) independent of operation count.
 ///
 /// # Example
 ///
@@ -208,9 +211,8 @@ impl Vec3Accumulator {
     /// into the internal state uses Neumaier summation. The multiplication
     /// `vec.x * scalar` happens in standard f64 arithmetic.
     ///
-    /// This is standard practice in numerical integration and is acceptable
-    /// for most physics simulations. If you require compensated multiplication,
-    /// you must implement it externally.
+    /// Multiplied terms are rounded before addition. If multiplication error
+    /// matters, the caller must use an independently validated method.
     #[inline]
     pub fn add_scaled(&mut self, vec: Vec3, scalar: f64) {
         self.x.add(vec.x * scalar);
@@ -276,7 +278,7 @@ mod tests {
     fn vec3_accumulator_catastrophic_cancellation() {
         let mut acc = Vec3Accumulator::new();
 
-        // This would fail with naive summation
+        // Naive summation loses the small increments in this sequence
         acc.add(Vec3::new(1e16, 1e16, 1e16));
         acc.add(Vec3::new(1.0, 1.0, 1.0));
         acc.add(Vec3::new(-1e16, -1e16, -1e16));
