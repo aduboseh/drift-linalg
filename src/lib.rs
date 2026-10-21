@@ -45,7 +45,11 @@ pub struct Vec3 {
 
 impl Vec3 {
     /// The zero vector.
-    pub const ZERO: Self = Self { x: 0.0, y: 0.0, z: 0.0 };
+    pub const ZERO: Self = Self {
+        x: 0.0,
+        y: 0.0,
+        z: 0.0,
+    };
 
     /// Create a new Vec3.
     #[inline]
@@ -284,9 +288,21 @@ mod tests {
         acc.add(Vec3::new(-1e16, -1e16, -1e16));
 
         let result = acc.resolve();
-        assert!((result.x - 1.0).abs() < 1e-10, "x: expected 1.0, got {}", result.x);
-        assert!((result.y - 1.0).abs() < 1e-10, "y: expected 1.0, got {}", result.y);
-        assert!((result.z - 1.0).abs() < 1e-10, "z: expected 1.0, got {}", result.z);
+        assert!(
+            (result.x - 1.0).abs() < 1e-10,
+            "x: expected 1.0, got {}",
+            result.x
+        );
+        assert!(
+            (result.y - 1.0).abs() < 1e-10,
+            "y: expected 1.0, got {}",
+            result.y
+        );
+        assert!(
+            (result.z - 1.0).abs() < 1e-10,
+            "z: expected 1.0, got {}",
+            result.z
+        );
     }
 
     #[test]
