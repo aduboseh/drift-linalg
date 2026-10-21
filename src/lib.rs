@@ -29,7 +29,8 @@
 #[cfg(feature = "serialization")]
 use serde::{Deserialize, Serialize};
 
-use drift_kernel::Neumaier;
+// Kernel v1.0.0 exposes ScgAccumulator; keep the local alias for API clarity.
+use drift_kernel::ScgAccumulator as Neumaier;
 
 /// A standard 3D vector
 ///
